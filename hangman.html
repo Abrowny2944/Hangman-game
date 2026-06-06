@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hangman</title>
+        <meta charset="UTF-8">
+        <link rel="icon" path="image/png" href="https://abrowny2944.neocities.org/rubber-duck.png">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="hangman-words.js"></script>
+        <style>
+            body{
+                background-color:#FFF;
+                color:#000;
+                font-family:sans-serif;
+            }
+            
+            .playButton{
+                border:2px solid #39D;
+                border-radius:8px;
+                color:#08D;
+                background-color:#8BF;
+                padding:5px 10px;
+                transition: ease 0.1s;
+            }
+            
+            .playButton:hover{
+                border:2px solid #4AE;
+                border-radius:8px;
+                color:#19E;
+                background-color:#ACF;
+                padding:5px 10px;
+                transform: scale(1.1);
+            }
+            .playButton:focus {
+                outline: none;
+            }
+            
+            mark{
+                border-radius:5px;
+                color:inherit;
+                background-color:#DDD;
+                padding: 5px 10px;
+            }
+            
+            input{
+                border-radius:5px;
+                color:#000;
+                background-color:#DDD;
+                padding:5px 10px;
+                border:2px solid #BBB;
+                transition: ease 0.1s;
+            }
+            
+            input:hover{
+                border-radius:5px;
+                color:#111;
+                background-color:#EEE;
+                padding:5px 10px;
+                border:2px solid #CCC;
+                transform: scale(1.1);
+            }
+            
+            button{
+                border-radius:5px;
+                color:#000;
+                background-color:#DDD;
+                padding:5px 10px;
+                border:2px solid #BBB;
+                transition: ease 0.1s;
+                -webkit-user-select: none; /* Safari */
+                -ms-user-select: none; /* IE 10+ */
+                user-select: none; /* Standard */
+            }
+            
+            button:hover{
+                border-radius:5px;
+                color:#111;
+                background-color:#EEE;
+                padding:5px 10px;
+                border:2px solid #CCC;
+                transform: scale(1.1);
+            }
+            
+            .custom-popup {
+                position: flex;
+                border-radius:15px;
+                padding:45px 40px;
+                background-color:#BDF;
+                border:6px solid #39D;
+                color:#08D;
+            }
+            
+            .font-display {
+                font-family: "Courier New", monospace;
+            }
+            
+            #welcomePopup::backdrop {
+                background-color: rgba(0, 0, 0, 0.7);
+                backdrop-filter: blur(10px);
+            }
+            #gameResult::backdrop {
+                background-color: rgba(0, 0, 0, 0.7);
+                backdrop-filter: blur(2px);
+            }
+            
+            a:link {
+             color:inherit;
+             text-decoration:none;
+            }
+            
+            a:visited {
+             color:inherit;
+             text-decoration:none;
+            }
+            
+            .floating-text {
+                position: absolute;
+                color: white;
+                font-weight: bold;
+                font-size: 24px;
+                pointer-events: none; /* Prevents text from blocking clicks */
+                user-select: none;
+                animation: floatUp 1s ease-out forwards;
+            }
+
+            @keyframes floatUp {
+                0% {
+                    transform: translateY(0);
+                    opacity: 1;
+                    }
+                100% {
+                    transform: translateY(-100px);
+                    opacity: 0;
+                }
+            }
+            
+        </style>
+    </head>
+    <body>
+        <dialog id="welcomePopup" class="custom-popup"><h2><b>Welcome to hangman</b></h2><form method="dialog"><button class="playButton"><b>Play</b></button></form><br><button class="playButton" onclick="window.location.href='index.html';"><b>Quit<b></button></dialog>
+        
+        <dialog class="custom-popup" id="gameResult">
+        <button tabindex="-1" autofocus style="border-color:transparent; background-color:transparent; outline:none;"></button>
+        <h1 id="endMessage"></h1>
+        <!-- This button reloads the page to effectively go 'Back to Menu' -->
+        <button class="playButton" onclick="location.reload()"><b>Back to Menu</b></button>
+        </dialog>
+        
+        <script>
+            const popup = document.getElementById('welcomePopup');
+            popup.showModal(); 
+        </script>
+        
+        <canvas id="mycanvas" width="250%" height="250%" style="background-color:#DDD; border-radius:10px;"></canvas>
+        <script>
+            var c = document.getElementById("mycanvas")
+            
+            var ctx = c.getContext("2d");
+            ctx.moveTo(100,50);
+            ctx.lineTo(200,50);
+            ctx.stroke();
+            
+            ctx.lineWidth = 2;
+            
+            var ctx = c.getContext("2d");
+            ctx.moveTo(200,50);
+            ctx.lineTo(200,200);
+            ctx.stroke();
+            
+            var ctx = c.getContext("2d");
+            ctx.moveTo(125,200);
+            ctx.lineTo(225,200);
+            ctx.stroke();
+            
+            var ctx = c.getContext("2d");
+            ctx.moveTo(100,50);
+            ctx.lineTo(100,70);
+            ctx.stroke();
+            
+            var wrongcount = 0
+            const stringList = words.strings;
+            const randomIndex = Math.floor(Math.random() * stringList.length);
+            const randomString = stringList[randomIndex];
+            
+            const str = "_";
+            let textdisplay = str.repeat(randomString.length);
+            
+            function drawloop() {
+                
+            if (wrongcount >= 1) {
+                var ctx = c.getContext("2d");
+                ctx.beginPath();
+                ctx.arc(100, 80, 10, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.fill();
+            }
+            
+            if (wrongcount >= 2) {
+                var ctx = c.getContext("2d");
+                ctx.moveTo(100,90);
+                ctx.lineTo(100,130);
+                ctx.stroke();
+            }
+            
+            if (wrongcount >= 3) {
+                var ctx = c.getContext("2d");
+                ctx.moveTo(100,130);
+                ctx.lineTo(90,160);
+                ctx.stroke();
+            }
+            
+            if (wrongcount >= 4) {
+                var ctx = c.getContext("2d");
+                ctx.moveTo(100,130);
+                ctx.lineTo(110,160);
+                ctx.stroke();
+            }
+            
+            if (wrongcount >= 5) {
+                var ctx = c.getContext("2d");
+                ctx.moveTo(100,100);
+                ctx.lineTo(120,125);
+                ctx.stroke();
+            }
+            
+            if (wrongcount >= 6) {
+                var ctx = c.getContext("2d");
+                ctx.moveTo(100,100);
+                ctx.lineTo(80,125);
+                ctx.stroke();
+            }
+            
+            requestAnimationFrame(drawloop);
+            }
+            drawloop();
+        </script>
+        <h3><mark class="font-display" id="guesstext"></mark></h3>
+        <script>
+            const textDisplayBox = document.getElementById('guesstext');
+            function writeloop() {
+                textDisplayBox.textContent = textdisplay.split('').join(' ');
+                
+                requestAnimationFrame(writeloop);
+            }
+            writeloop();
+        </script>
+        <input autocomplete="off" type="text" maxlength="1" minlength="1" size="1" id="inputBox"> <button id="submitButton"><img width="10px" height="10px" src=send.svg></button>
+        <script>
+            const submitBtn = document.getElementById("submitButton")
+            const inputField = document.getElementById("inputBox")
+            const resultDialog = document.getElementById("gameResult");
+            const endMessage = document.getElementById("endMessage");
+            
+            inputField.addEventListener("keydown", function(event) {
+                if (event.key === "Enter") {
+                    
+                    let currentChar = inputField.value.toLowerCase();
+                
+                if (randomString.toLowerCase().includes(currentChar.toLowerCase())) {
+                    
+                    let tempArray = textdisplay.split("");
+                    for (let i = 0; i < randomString.length; i++) {
+                    if (randomString[i].toLowerCase() === currentChar) {
+                        // 3. Replace the "_" at that exact position with the real letter
+                        tempArray[i] = randomString[i];
+                    }
+                    
+                    textdisplay = tempArray.join("");
+                    inputField.value = "";
+                    
+                    if (!textdisplay.includes("_")) {
+                        endMessage.innerText = "You Won!";
+                        resultDialog.showModal(); // Opens the result screen modally
+                    }
+                }
+                    
+                }
+                else {
+                    wrongcount = wrongcount + 1
+                    inputField.value = "";
+                    
+                    if (wrongcount >= 6) {
+                        endMessage.innerText = "You Lost! The word was: " + randomString;
+                        resultDialog.showModal();
+                        
+                    }
+                }
+                }
+            });
+            
+            submitBtn.addEventListener("click", function() {
+                
+                let currentChar = inputField.value.toLowerCase();
+                
+                if (randomString.toLowerCase().includes(currentChar.toLowerCase())) {
+                    
+                    let tempArray = textdisplay.split("");
+                    for (let i = 0; i < randomString.length; i++) {
+                    if (randomString[i].toLowerCase() === currentChar) {
+                        // 3. Replace the "_" at that exact position with the real letter
+                        tempArray[i] = randomString[i];
+                    }
+                    
+                    textdisplay = tempArray.join("");
+                    inputField.value = "";
+                    
+                    if (!textdisplay.includes("_")) {
+                        endMessage.innerText = "You Won!";
+                        resultDialog.showModal(); // Opens the result screen modally
+                    }
+                }
+                    
+                }
+                else {
+                    wrongcount = wrongcount + 1
+                    inputField.value = "";
+                    
+                    if (wrongcount >= 6) {
+                        endMessage.innerText = "You Lost! The word was: " + randomString;
+                        resultDialog.showModal();
+                        
+                    }
+                }
+                
+            });
+        </script>
+        
+    </body>
+</html>

@@ -1,0 +1,3 @@
+const words = {
+"strings": ["Apple","Banana","Strawberry", "Raspberry", "Grape", "Orange", "Fruit", "Carrot", "Grapefruit", "Potato", "Tomato", "Bean", "Blueberry", "Computer", "Paint", "Food", "Water", "Lake", "Tree", "Forest", "Leaf", "Paper", "Phone,", "Table", "Chair", "Game", "Train", "Plane", "Plain", "Donut", "Pizza", "Ground", "Ocean", "River", "Book", "Pen", "Pencil", "Pan", "Oven", "Stove", "Wash", "Dry", "Wet", "Mobile", "Desktop", "Library", "School", "Flower", "Cloud"]
+};
