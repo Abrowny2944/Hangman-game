@@ -139,6 +139,13 @@
                 box-shadow: 0 0 8px gray;
 
             }
+
+            #inputcontainer {
+                padding: 10px 10px;
+                background-color: #BBB;
+                border-radius: 10px;
+                box-shadow: 0 0 5px gray;
+            }
         </style>
     </head>
     <body>
@@ -249,7 +256,9 @@
             }
             writeloop();
         </script>
+        <span id="inputcontainer">
         <input autocomplete="off" type="text" maxlength="1" minlength="1" size="1" id="inputBox"> <button id="submitButton"><img width="10px" height="10px" src=send.svg></button>
+        </span>
         <script>
             const submitBtn = document.getElementById("submitButton")
             const inputField = document.getElementById("inputBox")
